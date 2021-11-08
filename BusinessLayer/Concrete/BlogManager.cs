@@ -33,6 +33,11 @@ namespace BusinessLayer.Concrete
             return _blogDal.GetListAll(x => x.BlogID == id);
         }
 
+        public List<Blog> GetListWithCategoryByWriter(int id)
+        {
+            return _blogDal.GetListWithCategoryByWriter(id);
+        }
+
         public List<Blog> GetList()
         {
             return _blogDal.GetListAll();
@@ -50,7 +55,7 @@ namespace BusinessLayer.Concrete
 
         public void TAdd(Blog t)
         {
-            throw new NotImplementedException();
+            _blogDal.Insert(t);
         }
 
         public void TDelete(Blog t)
