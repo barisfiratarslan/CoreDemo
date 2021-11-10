@@ -69,7 +69,47 @@ namespace CoreDemo.Controllers
             {
                 ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             }
+            CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
+            List<SelectListItem> categoryValues = (from x in categoryManager.GetList()
+                                                   select new SelectListItem
+                                                   {
+                                                       Text = x.CategoryName,
+                                                       Value = x.CategoryID.ToString()
+                                                   }).ToList();
+            ViewBag.cv = categoryValues;
             return View();
+        }
+
+        public IActionResult DeleteBlog(int id)
+        {
+            var blogValue = blogManager.GetByID(id);
+            blogManager.TDelete(blogValue);
+            return RedirectToAction("BlogListByWriter");
+        }
+
+        [HttpGet]
+        public IActionResult EditBlog(int id)
+        {
+            CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
+            List<SelectListItem> categoryValues = (from x in categoryManager.GetList()
+                                                   select new SelectListItem
+                                                   {
+                                                       Text = x.CategoryName,
+                                                       Value = x.CategoryID.ToString()
+                                                   }).ToList();
+            ViewBag.cv = categoryValues;
+            var blogValue = blogManager.GetByID(id);
+            return View(blogValue);
+        }
+
+        [HttpPost]
+        public IActionResult EditBlog(Blog blog)
+        {
+            blog.BlogStatus = true;
+            blog.BlogCreateDate = blogManager.GetByID(blog.BlogID).BlogCreateDate;
+            blog.WriterID = 1;
+            blogManager.TUpdate(blog);
+            return RedirectToAction("BlogListByWriter");
         }
     }
 }
