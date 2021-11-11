@@ -50,7 +50,7 @@ namespace CoreDemo.Controllers
                 //writer.WriterAbout = register.WriterPlace;
                 writer.WriterAbout = "Deneme Test";
 
-                writerManager.WriterAdd(writer);
+                writerManager.TAdd(writer);
                 return RedirectToAction("Index", "Blog");
             }
 
