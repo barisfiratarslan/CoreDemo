@@ -29,6 +29,11 @@ namespace BusinessLayer.Concrete
             return _categoryDal.GetListAll();
         }
 
+        public int GetTotalCategoryCount()
+        {
+            return _categoryDal.GetListAll().Count();
+        }
+
         public void TAdd(Category t)
         {
             _categoryDal.Insert(t);

@@ -41,6 +41,7 @@ namespace CoreDemo.Controllers
             {
                 Writer writer = new Writer()
                 {
+                    WriterID=register.WriterID,
                     WriterImage = register.WriterImage,
                     WriterMail = register.WriterMail,
                     WriterName = register.WriterName,
