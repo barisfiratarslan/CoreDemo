@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -13,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
 {
-    [AllowAnonymous]
     public class BlogController : Controller
     {
         BlogManager blogManager = new BlogManager(new EfBlogRepository());
@@ -33,7 +33,10 @@ namespace CoreDemo.Controllers
 
         public IActionResult BlogListByWriter()
         {
-            var values = blogManager.GetListWithCategoryByWriter(1);
+            var usermail = User.Identity.Name;
+            Context c = new Context();
+            var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(x => x.WriterID).FirstOrDefault();
+            var values = blogManager.GetListWithCategoryByWriter(writerID);
             return View(values);
         }
 
@@ -61,7 +64,10 @@ namespace CoreDemo.Controllers
             {
                 blog.BlogStatus = true;
                 blog.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                blog.WriterID = 1;
+                var usermail = User.Identity.Name;
+                Context c = new Context();
+                var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(x => x.WriterID).FirstOrDefault();
+                blog.WriterID = writerID;
                 blogManager.TAdd(blog);
                 return RedirectToAction("BlogListByWriter", "Blog");
             }
@@ -107,7 +113,10 @@ namespace CoreDemo.Controllers
         {
             blog.BlogStatus = true;
             blog.BlogCreateDate = blogManager.GetByID(blog.BlogID).BlogCreateDate;
-            blog.WriterID = 1;
+            var usermail = User.Identity.Name;
+            Context c = new Context();
+            var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(x => x.WriterID).FirstOrDefault();
+            blog.WriterID = writerID;
             blogManager.TUpdate(blog);
             return RedirectToAction("BlogListByWriter");
         }

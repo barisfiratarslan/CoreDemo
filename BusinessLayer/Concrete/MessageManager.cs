@@ -20,7 +20,7 @@ namespace BusinessLayer.Concrete
 
         public Message2 GetByID(int id)
         {
-            throw new NotImplementedException();
+            return _messageDal.GetByID(id);
         }
 
         public List<Message2> GetList()
@@ -30,7 +30,7 @@ namespace BusinessLayer.Concrete
 
         public List<Message2> GetInboxListByWriter(int id)
         {
-            return _messageDal.GetListAll(x => x.ReceiverID == id);
+            return _messageDal.GetListWithMessageByWriter(id);
         }
 
         public void TAdd(Message2 t)

@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using EntityLayer.DTOs;
@@ -19,29 +20,31 @@ namespace CoreDemo.Controllers
     {
         WriterManager writerManager = new WriterManager(new EfWriterRepository());
 
-        [AllowAnonymous]
+        [Authorize]
         public IActionResult Index()
         {
+            var usermail = User.Identity.Name;
+            ViewBag.v = usermail;
             return View();
         }
 
-        [AllowAnonymous]
         public PartialViewResult WriterNavbarPartial()
         {
             return PartialView();
         }
 
-        [AllowAnonymous]
         public PartialViewResult WriterFooterPartial()
         {
             return PartialView();
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult WriterEditProfile()
         {
-            var writerValues = writerManager.GetByID(1);
+            var usermail = User.Identity.Name;
+            Context c = new Context();
+            var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(x => x.WriterID).FirstOrDefault();
+            var writerValues = writerManager.GetByID(writerID);
             RegisterDto register = new RegisterDto()
             {
                 WriterAbout = writerValues.WriterAbout,
@@ -55,7 +58,6 @@ namespace CoreDemo.Controllers
             return View(register);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult WriterEditProfile(RegisterDto register)
         {
@@ -65,7 +67,7 @@ namespace CoreDemo.Controllers
             {
                 Writer writer = new Writer()
                 {
-                    WriterID = 1,
+                    WriterID = register.WriterID,
                     WriterImage = register.WriterImage,
                     WriterMail = register.WriterMail,
                     WriterName = register.WriterName,
@@ -82,14 +84,12 @@ namespace CoreDemo.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult WriterAdd()
         {
             return View();
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult WriterAdd(AddProfileImage addProfileImage)
         {
