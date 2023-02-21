@@ -12,7 +12,7 @@ namespace DataAccessLayer.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"server=DESKTOP-N7NUFR1; database=CoreBlogDb; integrated security=true;");
+            optionsBuilder.UseSqlServer(@"server=DESKTOP-NCH63VL; database=CoreBlogDb; integrated security=true;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,5 +41,6 @@ namespace DataAccessLayer.Concrete
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Message2> Message2s { get; set; }
+        public DbSet<Admin> Admins { get; set; }
     }
 }
